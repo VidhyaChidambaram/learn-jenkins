@@ -1,0 +1,39 @@
+job('maven job seed dsl') {
+    description('Update the console based on input')
+
+    scm {
+        git {
+            remote {
+                github('VidhyaChidambaram/junit5', 'https')
+                credentials('github_cred')
+            }
+        }
+    }
+
+    steps {
+
+        wrappers {
+            colorizeOutput(colorMap = 'xterm')
+        }
+
+        maven {
+            goals('clean install -DskipTests')
+            mavenOpts('-Xms256m')
+            mavenOpts('-Xmx512m')
+            mavenInstallation('jenkins-maven')
+            rootPOM('junit5-practice/pom.xml')
+        }
+
+        shell(""" echo 'Running the jar'
+        echo 'Going to archive test results'
+        """)
+
+        publishers {
+            archiveArtifacts('junit5-practice/target/*.jar')
+        }
+
+        shell(""" echo 'Archive and publish complete '
+        """)
+    }
+    
+}
