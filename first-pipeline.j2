@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Build') {
+            steps {
+                echo 'Start execution for build step'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Start execution for Test step'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Start execution for deploy step'
+            }
+        }
+    }
+}

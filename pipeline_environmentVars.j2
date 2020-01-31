@@ -1,0 +1,15 @@
+pipeline {
+    agent any
+    environment {
+        HOST_NAME = 'localhost'
+        CREDENTIALS = 'abcde'
+    }
+
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo Value of hostname is $HOST_NAME'
+            }
+        }
+    }
+}

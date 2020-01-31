@@ -1,0 +1,57 @@
+job('maven job seed dsl') {
+    description('Update the console based on input')
+
+    parameters {
+        choiceParam('environment', ['dev', 'test', 'qa', 'prod'])
+        stringParam('MESSAGE_VALUE')
+    }
+
+    scm {
+        git {
+            remote {
+                github('VidhyaChidambaram/junit5', 'https')
+                credentials('github_cred')
+            }
+        }
+    }
+
+    triggers {
+        cron('H * * * *')
+    }
+
+    steps {
+        shell(""" echo 'Hello world'
+                echo 'Hello India'
+                """)
+        wrappers {
+            colorizeOutput(colorMap = 'xterm')
+        }
+        # ansiblePlaybook('/var/jenkins_home/ansible/play.yml') {
+        #     inventoryPath('/var/jenkins_home/ansible/hosts')
+        #     colorizedOutput(true)
+        #     extraVars {
+        #         extraVar("MSG", '${MESSAGE_VALUE}', false)
+        #     }
+        # }
+
+        maven {
+            goals('clean install -DskipTests')
+            mavenOpts('-Xms256m')
+            mavenOpts('-Xmx512m')
+            mavenInstallation('jenkins-maven')
+            rootPOM('junit5-practice/pom.xml')
+        }
+
+        shell(""" echo 'Running the jar'
+        echo 'Going to archive test results'
+        """)
+
+        publishers {
+            archiveArtifacts('target/*.jar')
+        }
+
+        shell(""" echo 'Archive and publish complete '
+        """)
+    }
+    
+}
