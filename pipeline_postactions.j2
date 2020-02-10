@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+    environment {
+        CREDENTIALS_VALUE = credentials('remote_user')
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'echo Value of Credentials is $CREDENTIALS_VALUE'
+                sh 'echo Execution success!'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'I will be printed always irrespective of failure or success !!'
+        }
+        success {
+            echo 'I will be printed only if the job is success !'
+        }
+        failure {
+            echo 'I will be printed if the job failed!'
+        }
+        unstable {
+            echo 'I will be printed if the job execution ended in unstable'
+        }
+    }
+}
